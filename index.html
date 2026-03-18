@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>鈴峯ぴぴ Special Contents</title>
+    <link rel="preload" as="image" href="https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&dl=1">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -18,13 +19,68 @@
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            background-color: #000;
+            background-color: #000; /* ローディング中は真っ黒 */
             color: #fff;
             font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
+            overflow: hidden; /* ローディング中はスクロール不可 */
         }
 
-        /* --- イントロ画面 --- */
+        /* --- ローディング画面 (Apex風) --- */
+        #loading {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
+            background-color: #000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 200; /* イントロより手前 */
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        /* フェードアウト用 */
+        #loading.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Apexパック風ローディングアニメーション（簡易版） */
+        .loading-pack {
+            width: 60px; height: 60px;
+            background-color: #333; /* 暗い金属 */
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* 逆三角形 */
+            position: relative;
+            animation: pack-rotate 3s infinite linear;
+        }
+
+        .loading-pack::before {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 15px; height: 15px; background-color: var(--apex-blue);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--apex-blue);
+            animation: pack-glow 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pack-rotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        @keyframes pack-glow {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        .loading-text {
+            margin-top: 20px; color: #fff; font-size: 16px; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.6);
+            animation: text-blink 1s infinite alternate;
+        }
+
+        @keyframes text-blink {
+            from { opacity: 0.3; }
+            to { opacity: 1; }
+        }
+
+        /* --- イントロ画面（画像読み込み完了後に表示） --- */
         #intro {
             position: fixed;
             top: 0; left: 0;
@@ -34,7 +90,15 @@
             background-position: center;
             display: flex; justify-content: center; align-items: center;
             z-index: 100;
-            transition: opacity 0.6s ease;
+            opacity: 0; /* 初期状態は非表示 */
+            transition: opacity 0.8s ease;
+            pointer-events: none; /* 初期状態はクリック不可 */
+        }
+
+        /* フェードイン用 */
+        #intro.fade-in {
+            opacity: 1;
+            pointer-events: auto; /* クリック可能に */
         }
 
         #intro::after {
@@ -132,6 +196,10 @@
     </style>
 </head>
 <body>
+    <div id="loading">
+        <div class="loading-pack"></div>
+        <div class="loading-text">SYSTEM LOADING...</div>
+    </div>
 
     <div id="intro">
         <div class="signal-button" id="btn-start">
@@ -179,6 +247,31 @@
         const content = document.getElementById('content');
         const audio = document.getElementById('audio-ping');
         const video = document.getElementById('pipi-video');
+        const loading = document.getElementById('loading'); // ローディング要素を取得
+
+        // --- イントロ画像のプリロードロジックを追加 ---
+        const INTRO_IMG_URL = 'https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&dl=1';
+        const introImg = new Image();
+        introImg.src = INTRO_IMG_URL; // JavaScriptで画像の読み込みを開始
+
+        // 画像の読み込みが完了した時の処理
+        introImg.onload = () => {
+            // 画像読み込み完了後、少し遅延させてローディングをフェードアウト
+            setTimeout(() => {
+                loading.classList.add('fade-out'); // ローディングを消す
+                intro.classList.add('fade-in');    // イントロを表示
+                document.body.style.overflow = 'auto'; // スクロールを許可（念のためコンテンツページ用）
+            }, 800); // 演出用の遅延（すぐに切り替わると味気ないので）
+        };
+
+        // 画像読み込みが失敗した時の処理（保険）
+        introImg.onerror = () => {
+            console.error("Intro image load failed.");
+            // エラーでもイントロを表示してしまう（真っ黒になるのを避ける）
+            loading.classList.add('fade-out');
+            intro.classList.add('fade-in');
+        };
+        // ---------------------------------------------
 
         startBtn.addEventListener('click', (e) => {
             audio.play().catch(() => {});
