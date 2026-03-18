@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>鈴峯ぴぴ Special Contents</title>
-    <link rel="preload" as="image" href="https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&dl=1">
+    
+    <link rel="preload" as="image" href="https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&raw=1">
+    <link rel="preload" as="image" href="https://www.dropbox.com/scl/fi/9cs99ywk7hk0kcwbb3jcb/pipi_header.png?rlkey=6pezu3dpc41hvhlhzgbyxzar4&raw=1">
+    <link rel="preload" as="image" href="https://www.dropbox.com/scl/fi/izn1nzo0ietejd1lcr6bw/.jpg?rlkey=gac47khfepx4he019w4zf8d0w&raw=1">
+
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --apex-blue: #00f3ff;
@@ -19,263 +24,150 @@
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            background-color: #000; /* ローディング中は真っ黒 */
+            background-color: #000;
             color: #fff;
             font-family: 'Rajdhani', sans-serif;
-            overflow: hidden; /* ローディング中はスクロール不可 */
+            overflow: hidden;
         }
 
-        /* --- ローディング画面 (Apex風) --- */
+        /* --- ローディング画面 --- */
         #loading {
             position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
             background-color: #000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 200; /* イントロより手前 */
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            z-index: 200;
+            transition: opacity 0.5s ease;
         }
 
-        /* フェードアウト用 */
-        #loading.fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        /* Apexパック風ローディングアニメーション（簡易版） */
         .loading-pack {
-            width: 60px; height: 60px;
-            background-color: #333; /* 暗い金属 */
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* 逆三角形 */
+            width: 50px; height: 50px;
+            background-color: #222;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
             position: relative;
-            animation: pack-rotate 3s infinite linear;
+            animation: pack-rotate 2s infinite linear;
         }
-
-        .loading-pack::before {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 15px; height: 15px; background-color: var(--apex-blue);
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
+        .loading-pack::after {
+            content: ''; position: absolute; top: 50%; left: 50%; width: 12px; height: 12px;
+            background-color: var(--apex-blue); border-radius: 50%; transform: translate(-50%, -50%);
             box-shadow: 0 0 15px var(--apex-blue);
-            animation: pack-glow 1.5s infinite ease-in-out;
         }
+        @keyframes pack-rotate { 100% { transform: rotateY(360deg); } }
 
-        @keyframes pack-rotate {
-            0% { transform: rotateY(0deg); }
-            100% { transform: rotateY(360deg); }
-        }
-
-        @keyframes pack-glow {
-            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-        }
-
-        .loading-text {
-            margin-top: 20px; color: #fff; font-size: 16px; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.6);
-            animation: text-blink 1s infinite alternate;
-        }
-
-        @keyframes text-blink {
-            from { opacity: 0.3; }
-            to { opacity: 1; }
-        }
-
-        /* --- イントロ画面（画像読み込み完了後に表示） --- */
+        /* --- イントロ画面 --- */
         #intro {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100dvh;
-            background-image: url('https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&dl=1');
-            background-size: cover;
-            background-position: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
+            background-image: url('https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&raw=1');
+            background-size: cover; background-position: center;
             display: flex; justify-content: center; align-items: center;
-            z-index: 100;
-            opacity: 0; /* 初期状態は非表示 */
-            transition: opacity 0.8s ease;
-            pointer-events: none; /* 初期状態はクリック不可 */
+            z-index: 100; opacity: 0; transition: opacity 0.8s ease;
+            pointer-events: none;
         }
-
-        /* フェードイン用 */
-        #intro.fade-in {
-            opacity: 1;
-            pointer-events: auto; /* クリック可能に */
-        }
-
-        #intro::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.15); z-index: 1;
-        }
+        #intro.active { opacity: 1; pointer-events: auto; }
 
         .signal-button {
-            position: relative; z-index: 10;
-            display: flex; align-items: center;
-            padding: 18px 30px;
-            background: rgba(0, 0, 0, 0.85);
-            border: 2px solid var(--apex-blue);
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
-            animation: pulse 2s infinite;
+            position: relative; z-index: 10; display: flex; align-items: center;
+            padding: 18px 30px; background: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--apex-blue); border-radius: 8px;
+            cursor: pointer; animation: pulse 2s infinite;
         }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 243, 255, 0.6); }
-        }
+        @keyframes pulse { 50% { transform: scale(1.05); box-shadow: 0 0 25px var(--apex-blue); } }
 
         .signal-icon {
-            width: 26px; height: 26px;
-            background-color: var(--apex-blue);
+            width: 24px; height: 24px; background-color: var(--apex-blue);
             clip-path: polygon(50% 0%, 100% 50%, 80% 50%, 80% 100%, 20% 100%, 20% 50%, 0% 50%);
-            margin-right: 15px;
+            margin-right: 12px;
         }
-
-        .signal-text { color: var(--apex-blue); font-size: 22px; font-weight: 700; letter-spacing: 1px; }
 
         /* --- コンテンツ画面 --- */
         #content {
-            display: none;
-            width: 100%;
-            min-height: 100dvh;
-            background-color: var(--bg-dark);
-            flex-direction: column;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-            padding-bottom: 80px;
+            display: none; width: 100%; min-height: 100dvh;
+            background-color: var(--bg-dark); flex-direction: column; align-items: center;
+            opacity: 0; transition: opacity 0.8s ease; padding-bottom: 80px;
         }
 
-        .content-img {
-            width: 100%;
-            max-width: 600px;
-            height: auto;
-            display: block;
-        }
+        .content-img { width: 100%; max-width: 600px; height: auto; display: block; }
 
-        /* YouTube Shorts */
         .shorts-container {
-            width: 85%;
-            max-width: 340px;
-            aspect-ratio: 9/16;
-            margin: 35px 0;
-            border: 3px solid var(--pipi-pink);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 0 25px rgba(255, 192, 203, 0.3);
+            width: 85%; max-width: 340px; aspect-ratio: 9/16; margin: 30px 0;
+            border: 3px solid var(--pipi-pink); border-radius: 12px; overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 192, 203, 0.3);
         }
 
-        iframe { width: 100%; height: 100%; border: none; }
-
-        .sns-area {
-            width: 90%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 40px;
-        }
-
-        .sns-card {
-            display: flex; align-items: center; padding: 14px;
-            background: #16191d; border-left: 5px solid var(--pipi-blue);
-            text-decoration: none; color: white; border-radius: 6px;
-        }
+        .sns-area { width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .sns-card { display: flex; align-items: center; padding: 14px; background: #16191d; border-left: 5px solid var(--pipi-blue); text-decoration: none; color: white; border-radius: 6px; }
         .sns-card.x { border-color: #1DA1F2; }
-        .sns-card .icon { width: 45px; font-weight: bold; text-align: center; margin-right: 10px; font-size: 20px; }
 
-        /* 波紋効果 */
-        .ripple {
-            position: fixed; border-radius: 50%; background: rgba(0, 243, 255, 0.6);
-            transform: scale(0); animation: ripple-ani 0.7s ease-out;
-            pointer-events: none; z-index: 101;
-        }
+        .ripple { position: fixed; border-radius: 50%; background: rgba(0, 243, 255, 0.6); transform: scale(0); animation: ripple-ani 0.7s ease-out; pointer-events: none; z-index: 101; }
         @keyframes ripple-ani { to { transform: scale(30); opacity: 0; } }
 
         .hidden { display: none !important; }
-
     </style>
 </head>
 <body>
+
     <div id="loading">
         <div class="loading-pack"></div>
-        <div class="loading-text">SYSTEM LOADING...</div>
+        <p style="letter-spacing: 2px; font-size: 14px; margin-top: 15px;">SYNCHRONIZING...</p>
     </div>
 
     <div id="intro">
         <div class="signal-button" id="btn-start">
             <div class="signal-icon"></div>
-            <div class="signal-text">ここを探索する</div>
+            <div class="signal-text" style="font-weight: 700;">ここを探索する</div>
         </div>
     </div>
 
     <div id="content">
-        <img src="https://www.dropbox.com/scl/fi/9cs99ywk7hk0kcwbb3jcb/pipi_header.png?rlkey=6pezu3dpc41hvhlhzgbyxzar4&dl=1" class="content-img" alt="Header">
+        <img id="img1" src="https://www.dropbox.com/scl/fi/9cs99ywk7hk0kcwbb3jcb/pipi_header.png?rlkey=6pezu3dpc41hvhlhzgbyxzar4&raw=1" class="content-img" alt="Header">
 
         <div class="shorts-container">
-            <iframe id="pipi-video" 
-                src="https://www.youtube.com/embed/TFxDIzHL1cQ?rel=0&modestbranding=1&enablejsapi=1" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
+            <iframe id="pipi-video" src="https://www.youtube.com/embed/TFxDIzHL1cQ?rel=0&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen style="width:100%; height:100%; border:none;"></iframe>
         </div>
 
-        <img src="https://www.dropbox.com/scl/fi/izn1nzo0ietejd1lcr6bw/.jpg?rlkey=gac47khfepx4he019w4zf8d0w&dl=1" class="content-img" alt="Sub Image">
+        <img id="img2" src="https://www.dropbox.com/scl/fi/izn1nzo0ietejd1lcr6bw/.jpg?rlkey=gac47khfepx4he019w4zf8d0w&raw=1" class="content-img" alt="Sub Image">
 
         <div class="sns-area">
             <a href="https://x.com/pipipi_1205" class="sns-card x" target="_blank">
-                <div class="icon">X</div>
-                <div>
-                    <div style="font-size: 11px; opacity: 0.6;">Follow Me</div>
-                    <div style="font-weight: bold;">@pipipi_1205</div>
-                </div>
+                <div style="width:40px; font-weight:bold; font-size:20px;">X</div>
+                <div><div style="font-size:11px; opacity:0.6;">Follow Me</div><div style="font-weight:bold;">@pipipi_1205</div></div>
             </a>
             <a href="https://youtube.com/channel/UCWAzVata5OrkI-b-5eYBuZA" class="sns-card" target="_blank">
-                <div class="icon" style="color: #ff0000;">YT</div>
-                <div>
-                    <div style="font-size: 11px; opacity: 0.6;">Subscribe</div>
-                    <div style="font-weight: bold;">鈴峯ぴぴ / Suzumine Pipi</div>
-                </div>
+                <div style="width:40px; font-weight:bold; font-size:20px; color:#ff0000;">YT</div>
+                <div><div style="font-size:11px; opacity:0.6;">Subscribe</div><div style="font-weight:bold;">鈴峯ぴぴ / Suzumine Pipi</div></div>
             </a>
         </div>
     </div>
 
-    <audio id="audio-ping" src="https://www.dropbox.com/scl/fi/ro1oj07y08itq12o0jf9n/apex-legends-ping.mp3?rlkey=14m5p3s9oz0pkwuxiqjbsyceb&dl=1" preload="auto"></audio>
+    <audio id="audio-ping" src="https://www.dropbox.com/scl/fi/ro1oj07y08itq12o0jf9n/apex-legends-ping.mp3?rlkey=14m5p3s9oz0pkwuxiqjbsyceb&raw=1" preload="auto"></audio>
 
     <script>
-        const startBtn = document.getElementById('btn-start');
-        const intro = document.getElementById('intro');
-        const content = document.getElementById('content');
-        const audio = document.getElementById('audio-ping');
-        const video = document.getElementById('pipi-video');
-        const loading = document.getElementById('loading'); // ローディング要素を取得
+        const images = [
+            'https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&raw=1',
+            'https://www.dropbox.com/scl/fi/9cs99ywk7hk0kcwbb3jcb/pipi_header.png?rlkey=6pezu3dpc41hvhlhzgbyxzar4&raw=1',
+            'https://www.dropbox.com/scl/fi/izn1nzo0ietejd1lcr6bw/.jpg?rlkey=gac47khfepx4he019w4zf8d0w&raw=1'
+        ];
 
-        // --- イントロ画像のプリロードロジックを追加 ---
-        const INTRO_IMG_URL = 'https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&dl=1';
-        const introImg = new Image();
-        introImg.src = INTRO_IMG_URL; // JavaScriptで画像の読み込みを開始
+        let loadedCount = 0;
+        images.forEach(url => {
+            const img = new Image();
+            img.src = url;
+            img.onload = () => {
+                loadedCount++;
+                if (loadedCount === images.length) {
+                    // すべての画像が読み込まれたら開始
+                    setTimeout(() => {
+                        document.getElementById('loading').style.opacity = '0';
+                        setTimeout(() => {
+                            document.getElementById('loading').classList.add('hidden');
+                            document.getElementById('intro').classList.add('active');
+                        }, 500);
+                    }, 1000);
+                }
+            };
+        });
 
-        // 画像の読み込みが完了した時の処理
-        introImg.onload = () => {
-            // 画像読み込み完了後、少し遅延させてローディングをフェードアウト
-            setTimeout(() => {
-                loading.classList.add('fade-out'); // ローディングを消す
-                intro.classList.add('fade-in');    // イントロを表示
-                document.body.style.overflow = 'auto'; // スクロールを許可（念のためコンテンツページ用）
-            }, 800); // 演出用の遅延（すぐに切り替わると味気ないので）
-        };
-
-        // 画像読み込みが失敗した時の処理（保険）
-        introImg.onerror = () => {
-            console.error("Intro image load failed.");
-            // エラーでもイントロを表示してしまう（真っ黒になるのを避ける）
-            loading.classList.add('fade-out');
-            intro.classList.add('fade-in');
-        };
-        // ---------------------------------------------
-
-        startBtn.addEventListener('click', (e) => {
-            audio.play().catch(() => {});
-
+        document.getElementById('btn-start').addEventListener('click', (e) => {
+            document.getElementById('audio-ping').play().catch(()=>{});
             const ripple = document.createElement('div');
             ripple.classList.add('ripple');
             ripple.style.left = e.clientX + 'px';
@@ -283,15 +175,14 @@
             document.body.appendChild(ripple);
 
             setTimeout(() => {
-                intro.style.opacity = '0';
+                document.getElementById('intro').style.opacity = '0';
                 setTimeout(() => {
-                    intro.classList.add('hidden');
-                    content.style.display = 'flex';
-                    window.scrollTo(0, 0);
+                    document.getElementById('intro').classList.add('hidden');
+                    document.getElementById('content').style.display = 'flex';
+                    document.body.style.overflow = 'auto';
                     setTimeout(() => {
-                        content.style.opacity = '1';
-                        // 自動再生を試行
-                        video.src += "&autoplay=1";
+                        document.getElementById('content').style.opacity = '1';
+                        document.getElementById('pipi-video').src += "&autoplay=1";
                     }, 50);
                 }, 600);
             }, 500);
