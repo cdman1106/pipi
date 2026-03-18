@@ -24,7 +24,7 @@
             overflow-x: hidden;
         }
 
-        /* --- イントロ画面（全画面） --- */
+        /* --- イントロ画面 --- */
         #intro {
             position: fixed;
             top: 0; left: 0;
@@ -39,7 +39,7 @@
 
         #intro::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.2); z-index: 1;
+            background: rgba(0,0,0,0.15); z-index: 1;
         }
 
         .signal-button {
@@ -78,7 +78,7 @@
             align-items: center;
             opacity: 0;
             transition: opacity 0.8s ease;
-            padding-bottom: 60px;
+            padding-bottom: 80px;
         }
 
         .content-img {
@@ -88,17 +88,16 @@
             display: block;
         }
 
-        /* YouTube Shorts エリア */
+        /* YouTube Shorts */
         .shorts-container {
             width: 85%;
             max-width: 340px;
             aspect-ratio: 9/16;
-            margin: 30px 0;
+            margin: 35px 0;
             border: 3px solid var(--pipi-pink);
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 0 25px rgba(255, 192, 203, 0.3);
-            z-index: 5;
         }
 
         iframe { width: 100%; height: 100%; border: none; }
@@ -109,18 +108,13 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-top: 30px;
+            margin-top: 40px;
         }
 
         .sns-card {
-            display: flex;
-            align-items: center;
-            padding: 14px;
-            background: #16191d;
-            border-left: 5px solid var(--pipi-blue);
-            text-decoration: none;
-            color: white;
-            border-radius: 6px;
+            display: flex; align-items: center; padding: 14px;
+            background: #16191d; border-left: 5px solid var(--pipi-blue);
+            text-decoration: none; color: white; border-radius: 6px;
         }
         .sns-card.x { border-color: #1DA1F2; }
         .sns-card .icon { width: 45px; font-weight: bold; text-align: center; margin-right: 10px; font-size: 20px; }
@@ -157,7 +151,7 @@
             </iframe>
         </div>
 
-        <img src="https://www.dropbox.com/scl/fi/z9u7ok3ok2by2nvtzspg4/.psd?rlkey=i8gbtyelgj6wa7sqdbhrelema&dl=1" class="content-img" alt="Sub Image">
+        <img src="https://www.dropbox.com/scl/fi/izn1nzo0ietejd1lcr6bw/.jpg?rlkey=gac47khfepx4he019w4zf8d0w&dl=1" class="content-img" alt="Sub Image">
 
         <div class="sns-area">
             <a href="https://x.com/pipipi_1205" class="sns-card x" target="_blank">
@@ -187,17 +181,14 @@
         const video = document.getElementById('pipi-video');
 
         startBtn.addEventListener('click', (e) => {
-            // 音を再生
             audio.play().catch(() => {});
 
-            // 波紋演出
             const ripple = document.createElement('div');
             ripple.classList.add('ripple');
             ripple.style.left = e.clientX + 'px';
             ripple.style.top = e.clientY + 'px';
             document.body.appendChild(ripple);
 
-            // 遷移
             setTimeout(() => {
                 intro.style.opacity = '0';
                 setTimeout(() => {
@@ -206,7 +197,7 @@
                     window.scrollTo(0, 0);
                     setTimeout(() => {
                         content.style.opacity = '1';
-                        // 自動再生
+                        // 自動再生を試行
                         video.src += "&autoplay=1";
                     }, 50);
                 }, 600);
