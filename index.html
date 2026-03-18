@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>鈴峯ぴぴ Special Contents</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --apex-blue: #00f3ff;
+            --pipi-blue: #b0e0e6;
+            --pipi-pink: #ffc0cb;
+            --bg-dark: #0b0e11;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- イントロ画面（全画面） --- */
+        #intro {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100dvh;
+            background-image: url('https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&dl=1');
+            background-size: cover;
+            background-position: center;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 100;
+            transition: opacity 0.6s ease;
+        }
+
+        #intro::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.2); z-index: 1;
+        }
+
+        .signal-button {
+            position: relative; z-index: 10;
+            display: flex; align-items: center;
+            padding: 18px 30px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--apex-blue);
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 243, 255, 0.6); }
+        }
+
+        .signal-icon {
+            width: 26px; height: 26px;
+            background-color: var(--apex-blue);
+            clip-path: polygon(50% 0%, 100% 50%, 80% 50%, 80% 100%, 20% 100%, 20% 50%, 0% 50%);
+            margin-right: 15px;
+        }
+
+        .signal-text { color: var(--apex-blue); font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+
+        /* --- コンテンツ画面 --- */
+        #content {
+            display: none;
+            width: 100%;
+            min-height: 100dvh;
+            background-color: var(--bg-dark);
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            padding-bottom: 60px;
+        }
+
+        .content-img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            display: block;
+        }
+
+        /* YouTube Shorts エリア */
+        .shorts-container {
+            width: 85%;
+            max-width: 340px;
+            aspect-ratio: 9/16;
+            margin: 30px 0;
+            border: 3px solid var(--pipi-pink);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(255, 192, 203, 0.3);
+            z-index: 5;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .sns-area {
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .sns-card {
+            display: flex;
+            align-items: center;
+            padding: 14px;
+            background: #16191d;
+            border-left: 5px solid var(--pipi-blue);
+            text-decoration: none;
+            color: white;
+            border-radius: 6px;
+        }
+        .sns-card.x { border-color: #1DA1F2; }
+        .sns-card .icon { width: 45px; font-weight: bold; text-align: center; margin-right: 10px; font-size: 20px; }
+
+        /* 波紋効果 */
+        .ripple {
+            position: fixed; border-radius: 50%; background: rgba(0, 243, 255, 0.6);
+            transform: scale(0); animation: ripple-ani 0.7s ease-out;
+            pointer-events: none; z-index: 101;
+        }
+        @keyframes ripple-ani { to { transform: scale(30); opacity: 0; } }
+
+        .hidden { display: none !important; }
+
+    </style>
+</head>
+<body>
+
+    <div id="intro">
+        <div class="signal-button" id="btn-start">
+            <div class="signal-icon"></div>
+            <div class="signal-text">ここを探索する</div>
+        </div>
+    </div>
+
+    <div id="content">
+        <img src="https://www.dropbox.com/scl/fi/9cs99ywk7hk0kcwbb3jcb/pipi_header.png?rlkey=6pezu3dpc41hvhlhzgbyxzar4&dl=1" class="content-img" alt="Header">
+
+        <div class="shorts-container">
+            <iframe id="pipi-video" 
+                src="https://www.youtube.com/embed/TFxDIzHL1cQ?rel=0&modestbranding=1&enablejsapi=1" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <img src="https://www.dropbox.com/scl/fi/z9u7ok3ok2by2nvtzspg4/.psd?rlkey=i8gbtyelgj6wa7sqdbhrelema&dl=1" class="content-img" alt="Sub Image">
+
+        <div class="sns-area">
+            <a href="https://x.com/pipipi_1205" class="sns-card x" target="_blank">
+                <div class="icon">X</div>
+                <div>
+                    <div style="font-size: 11px; opacity: 0.6;">Follow Me</div>
+                    <div style="font-weight: bold;">@pipipi_1205</div>
+                </div>
+            </a>
+            <a href="https://youtube.com/channel/UCWAzVata5OrkI-b-5eYBuZA" class="sns-card" target="_blank">
+                <div class="icon" style="color: #ff0000;">YT</div>
+                <div>
+                    <div style="font-size: 11px; opacity: 0.6;">Subscribe</div>
+                    <div style="font-weight: bold;">鈴峯ぴぴ / Suzumine Pipi</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <audio id="audio-ping" src="https://www.dropbox.com/scl/fi/ro1oj07y08itq12o0jf9n/apex-legends-ping.mp3?rlkey=14m5p3s9oz0pkwuxiqjbsyceb&dl=1" preload="auto"></audio>
+
+    <script>
+        const startBtn = document.getElementById('btn-start');
+        const intro = document.getElementById('intro');
+        const content = document.getElementById('content');
+        const audio = document.getElementById('audio-ping');
+        const video = document.getElementById('pipi-video');
+
+        startBtn.addEventListener('click', (e) => {
+            // 音を再生
+            audio.play().catch(() => {});
+
+            // 波紋演出
+            const ripple = document.createElement('div');
+            ripple.classList.add('ripple');
+            ripple.style.left = e.clientX + 'px';
+            ripple.style.top = e.clientY + 'px';
+            document.body.appendChild(ripple);
+
+            // 遷移
+            setTimeout(() => {
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.classList.add('hidden');
+                    content.style.display = 'flex';
+                    window.scrollTo(0, 0);
+                    setTimeout(() => {
+                        content.style.opacity = '1';
+                        // 自動再生
+                        video.src += "&autoplay=1";
+                    }, 50);
+                }, 600);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
