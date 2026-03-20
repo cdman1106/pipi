@@ -6,6 +6,7 @@
     <title>鈴峯ぴぴ Special Contents</title>
     
     <link rel="preload" as="image" href="https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&raw=1">
+    <link rel="preload" as="image" href="https://www.dropbox.com/scl/fi/ywuf0nkoelpafk1hkz02v/169_20251202212007.png?rlkey=t0m2fvafa8054q5ygd59rty73&raw=1">
     <link rel="preload" as="image" href="https://www.dropbox.com/scl/fi/9cs99ywk7hk0kcwbb3jcb/pipi_header.png?rlkey=6pezu3dpc41hvhlhzgbyxzar4&raw=1">
     <link rel="preload" as="image" href="https://www.dropbox.com/scl/fi/izn1nzo0ietejd1lcr6bw/.jpg?rlkey=gac47khfepx4he019w4zf8d0w&raw=1">
 
@@ -16,7 +17,6 @@
             --apex-blue: #00f3ff;
             --pipi-blue: #b0e0e6;
             --pipi-pink: #ffc0cb;
-            --bg-dark: #0b0e11;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -27,7 +27,7 @@
             background-color: #000;
             color: #fff;
             font-family: 'Rajdhani', sans-serif;
-            overflow: hidden;
+            overflow: hidden; /* ローディング & イントロ中はスクロール不可 */
         }
 
         /* --- ローディング画面 --- */
@@ -81,20 +81,39 @@
         /* --- コンテンツ画面 --- */
         #content {
             display: none; width: 100%; min-height: 100dvh;
-            background-color: var(--bg-dark); flex-direction: column; align-items: center;
+            
+            /* 新しい背景画像を設定 */
+            background-image: url('https://www.dropbox.com/scl/fi/ywuf0nkoelpafk1hkz02v/169_20251202212007.png?rlkey=t0m2fvafa8054q5ygd59rty73&raw=1');
+            background-size: cover; /* 画面全体にフィット */
+            background-position: center center; /* 中央配置 */
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* スクロール時に背景を固定（パララックス効果） */
+            
+            flex-direction: column; align-items: center;
             opacity: 0; transition: opacity 0.8s ease; padding-bottom: 80px;
+            overflow-y: auto; /* コンテンツページはスクロール可能に */
         }
+
+        /* 背景画像の上に薄いオーバーレイを重ねてコンテンツを読みやすくする（任意） */
+        #content::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* 30%の黒 */
+            z-index: 1; pointer-events: none;
+        }
+
+        /* コンテンツ内の要素はオーバーレイより手前に表示 */
+        #content > * { position: relative; z-index: 2; }
 
         .content-img { width: 100%; max-width: 600px; height: auto; display: block; }
 
         .shorts-container {
             width: 85%; max-width: 340px; aspect-ratio: 9/16; margin: 30px 0;
             border: 3px solid var(--pipi-pink); border-radius: 12px; overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 192, 203, 0.3);
+            box-shadow: 0 0 20px rgba(255, 192, 203, 0.4);
         }
 
         .sns-area { width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-        .sns-card { display: flex; align-items: center; padding: 14px; background: #16191d; border-left: 5px solid var(--pipi-blue); text-decoration: none; color: white; border-radius: 6px; }
+        .sns-card { display: flex; align-items: center; padding: 14px; background: rgba(22, 25, 29, 0.9); border-left: 5px solid var(--pipi-blue); text-decoration: none; color: white; border-radius: 6px; }
         .sns-card.x { border-color: #1DA1F2; }
 
         .ripple { position: fixed; border-radius: 50%; background: rgba(0, 243, 255, 0.6); transform: scale(0); animation: ripple-ani 0.7s ease-out; pointer-events: none; z-index: 101; }
@@ -141,8 +160,10 @@
     <audio id="audio-ping" src="https://www.dropbox.com/scl/fi/ro1oj07y08itq12o0jf9n/apex-legends-ping.mp3?rlkey=14m5p3s9oz0pkwuxiqjbsyceb&raw=1" preload="auto"></audio>
 
     <script>
+        // プリロードする画像のリスト (新しい背景画像を追加)
         const images = [
             'https://www.dropbox.com/scl/fi/4n1d1xeh2abvwzkm7hkwa/122-131.png?rlkey=gsmqn4lx3pgwan2twthd8r5pk&raw=1',
+            'https://www.dropbox.com/scl/fi/ywuf0nkoelpafk1hkz02v/169_20251202212007.png?rlkey=t0m2fvafa8054q5ygd59rty73&raw=1',
             'https://www.dropbox.com/scl/fi/9cs99ywk7hk0kcwbb3jcb/pipi_header.png?rlkey=6pezu3dpc41hvhlhzgbyxzar4&raw=1',
             'https://www.dropbox.com/scl/fi/izn1nzo0ietejd1lcr6bw/.jpg?rlkey=gac47khfepx4he019w4zf8d0w&raw=1'
         ];
@@ -154,7 +175,7 @@
             img.onload = () => {
                 loadedCount++;
                 if (loadedCount === images.length) {
-                    // すべての画像が読み込まれたら開始
+                    // すべての画像（イントロ背景、コンテンツ背景、ヘッダー、サブ）が読み込まれたら開始
                     setTimeout(() => {
                         document.getElementById('loading').style.opacity = '0';
                         setTimeout(() => {
@@ -163,6 +184,12 @@
                         }, 500);
                     }, 1000);
                 }
+            };
+            // エラーハンドリング (念のため)
+            img.onerror = () => {
+                console.error("Image load failed: " + url);
+                loadedCount++; // エラーでもカウントを進めてページを表示させる
+                if (loadedCount === images.length) { /* 同じ処理 */ }
             };
         });
 
@@ -179,10 +206,17 @@
                 setTimeout(() => {
                     document.getElementById('intro').classList.add('hidden');
                     document.getElementById('content').style.display = 'flex';
-                    document.body.style.overflow = 'auto';
+                    // コンテンツページはスクロール可能にするため、bodyのoverflowを戻す
+                    document.body.style.overflow = 'auto'; 
+                    // iOS Safari対策：遷移時にトップへスクロール
+                    window.scrollTo(0, 0); 
                     setTimeout(() => {
                         document.getElementById('content').style.opacity = '1';
-                        document.getElementById('pipi-video').src += "&autoplay=1";
+                        // 自動再生パラメータを追加して動画を開始
+                        const videoIframe = document.getElementById('pipi-video');
+                        if (videoIframe.src.indexOf('autoplay=1') === -1) {
+                            videoIframe.src += "&autoplay=1";
+                        }
                     }, 50);
                 }, 600);
             }, 500);
